@@ -1,6 +1,7 @@
 package com.sky.controller.admin;
 
 import com.sky.constant.JwtClaimsConstant;
+import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
 import com.sky.properties.JwtProperties;
@@ -8,6 +9,8 @@ import com.sky.result.Result;
 import com.sky.service.EmployeeService;
 import com.sky.utils.JwtUtil;
 import com.sky.vo.EmployeeLoginVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +27,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin/employee")
 @Slf4j
+@Api(tags = "员工相关的接口")
 public class EmployeeController {
 
     @Autowired
@@ -37,6 +41,7 @@ public class EmployeeController {
      * @param employeeLoginDTO
      * @return
      */
+    @ApiOperation(value = "员工登录" )
     @PostMapping("/login")
     public Result<EmployeeLoginVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO) {
         log.info("员工登录：{}", employeeLoginDTO);
@@ -66,9 +71,17 @@ public class EmployeeController {
      *
      * @return
      */
+    @ApiOperation(value = "员工退出" )
     @PostMapping("/logout")
     public Result<String> logout() {
         return Result.success();
+    }
+    @ApiOperation(value = "员工注册" )
+//    因为这里的请求路径这个方法的请求路径是相同的因此不需要加入路径
+    @PostMapping
+//    因为这里传回来的是一个json格式的数据所以需要加上注解
+    public Result<String> save(@RequestBody EmployeeDTO employeeDTO){
+        return null;
     }
 
 }
