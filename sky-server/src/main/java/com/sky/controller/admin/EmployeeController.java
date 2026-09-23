@@ -81,6 +81,7 @@ public class EmployeeController {
     @PostMapping
 //    因为这里传回来的是一个json格式的数据所以需要加上注解
     public Result<String> save(@RequestBody EmployeeDTO employeeDTO){
+        System.out.println("当前线程的id是"+Thread.currentThread().getId());
         log.info("新增员工{}",employeeDTO);
         employeeService.save(employeeDTO);
         return Result.success();
