@@ -1,16 +1,20 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
+import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
+import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
 import net.bytebuddy.dynamic.DynamicType;
 import org.springframework.beans.BeanUtils;
@@ -21,6 +25,7 @@ import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -92,6 +97,23 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeMapper.insert(employee);
 
 
+    }
+
+    @Override
+    public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
+        System.out.println("进行用户的查询");
+        //        从这里面得到当前的页数以及每一页的大小
+//        如果不用这些库使用mysql框架那么需要使用limit关键字来实现，select * from employee limit 0,10
+//        通过pagehelper可以简化分页代码的编写
+//        这个的原理是会动态拼接后面的mysql语句
+        //开始分页查询
+        PageHelper.startPage(
+                employeePageQueryDTO.getPage(),
+                employeePageQueryDTO.getPageSize()
+        );
+        Page<Employee> employees= employeeMapper.querry(employeePageQueryDTO);
+        PageResult pageResult=new PageResult(employees.getTotal(),employees.getResult());
+        return pageResult;
     }
 
 }

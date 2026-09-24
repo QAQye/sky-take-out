@@ -1,9 +1,13 @@
 package com.sky.mapper;
 
+import com.github.pagehelper.Page;
+import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface EmployeeMapper {
@@ -20,4 +24,6 @@ public interface EmployeeMapper {
             "values " +
             "(#{name}, #{username}, #{password}, #{phone}, #{sex}, #{idNumber}, #{status}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser})")
     public void insert(Employee employee);
+//    因为这个地方我们需要使用到动态sql，动态sql使用注解方式编译不是很方便，所以就写一下映射文件中
+    public Page<Employee> querry(EmployeePageQueryDTO employeePageQueryDTO);
 }
