@@ -75,6 +75,7 @@ public class EmployeeController {
     public Result<String> logout() {
         return Result.success();
     }
+
     @ApiOperation(value = "新增员工" )
 //    因为这里的请求路径这个方法的请求路径是相同的因此不需要加入路径
     @PostMapping
@@ -85,6 +86,7 @@ public class EmployeeController {
         employeeService.save(employeeDTO);
         return Result.success();
     }
+//为什么这里分页查询要查询出所有的员工，是因为后面的账号启停以及其他业务功能需要使用，所以这里也需要！！！
     @ApiOperation(value = "员工分页查询" )
     @GetMapping("/page")
 //    这里的意思是生成对象类型的data数据是Result数据
@@ -92,5 +94,12 @@ public class EmployeeController {
         log.info("查询员工{}",employeePageQueryDTO.getName());
         PageResult pageResult =employeeService.pageQuery(employeePageQueryDTO);
         return Result.success(pageResult);
+    }
+    @ApiOperation(value = "员工账号启停" )
+    @PostMapping("/status/{status}")
+    public Result startOrStop(@PathVariable("status") Integer status,  @RequestParam("id") Long id){
+        log.info("修改{}员工账号状态{}",id,status);
+        employeeService.startOrStop(id,status);
+        return Result.success();
     }
 }

@@ -16,7 +16,6 @@ import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
 import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
-import com.sky.vo.EmployeePageQueryVO;
 import net.bytebuddy.dynamic.DynamicType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +62,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             //密码错误
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
         }
-
+//        这里定义了账号被锁定的异常，在登录的时候会校验，在抛出这个异常之后会由相应的处理器进行处理
         if (employee.getStatus() == StatusConstant.DISABLE) {
             //账号被锁定
             throw new AccountLockedException(MessageConstant.ACCOUNT_LOCKED);
@@ -119,26 +118,35 @@ public class EmployeeServiceImpl implements EmployeeService {
         Page<Employee> employees = employeeMapper.querry(employeePageQueryDTO);
 
 // 将当前页的 Employee 列表转换为 EmployeePageQueryVO 列表
-        List<EmployeePageQueryVO> records = employees.getResult() // 获取当前页的员工列表
-                .stream() // 将列表转成流，方便逐个转换员工对象
-                .map(employee -> {
-                    // map：把每个 Employee 转换成一个 EmployeePageQueryVO
-                    // employee 表示当前正在处理的员工对象
-
-                    // 为当前员工创建一个新的 VO，用于存放返回给前端的数据
-                    EmployeePageQueryVO vo = new EmployeePageQueryVO();
-
-                    // 将 employee 中名称相同、类型兼容的属性复制到 vo
-                    // 第一个参数是源对象，第二个参数是目标对象
-                    // VO 中没有的属性不会被复制，例如 VO 不定义 password 就不会复制密码
-                    BeanUtils.copyProperties(employee, vo);
-
-                    // 将 vo 作为当前员工的转换结果
-                    return vo;
-                })
-                .collect(Collectors.toList()); // 将转换后的所有 VO 收集成 List，赋值给 records
-        PageResult pageResult=new PageResult(employees.getTotal(),records);
+//        List<EmployeePageQueryVO> records = employees.getResult() // 获取当前页的员工列表
+//                .stream() // 将列表转成流，方便逐个转换员工对象
+//                .map(employee -> {
+//                    // map：把每个 Employee 转换成一个 EmployeePageQueryVO
+//                    // employee 表示当前正在处理的员工对象
+//
+//                    // 为当前员工创建一个新的 VO，用于存放返回给前端的数据
+//                    EmployeePageQueryVO vo = new EmployeePageQueryVO();
+//
+//                    // 将 employee 中名称相同、类型兼容的属性复制到 vo
+//                    // 第一个参数是源对象，第二个参数是目标对象
+//                    // VO 中没有的属性不会被复制，例如 VO 不定义 password 就不会复制密码
+//                    BeanUtils.copyProperties(employee, vo);
+//
+//                    // 将 vo 作为当前员工的转换结果
+//                    return vo;
+//                })
+//                .collect(Collectors.toList()); // 将转换后的所有 VO 收集成 List，赋值给 records
+        PageResult pageResult=new PageResult(employees.getTotal(),employees.getResult());
         return pageResult;
+    }
+
+    @Override
+    public void startOrStop(Long id, Integer status) {
+        Employee employee=new Employee();
+        employee.setId(id);
+        employee.setStatus(status);
+        employee.setUpdateTime(LocalDateTime.now());
+        employeeMapper.updateEmployee(employee);
     }
 
 }
