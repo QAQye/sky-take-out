@@ -30,4 +30,6 @@ public interface EmployeeMapper {
 //    虽然说这么写sql没有错误，但是为了之后更有通用性，所以可以修改这个写法
 //    @Update("update employee SET status=#{status} WHERE id=#{id}")
     void updateEmployee(Employee e);
+    @Select("select * from employee where id = #{id}")
+    Employee getById(Long id);
 }

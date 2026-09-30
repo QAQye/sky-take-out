@@ -8,8 +8,7 @@ import java.io.Serializable;
 
 @Data
 //为了和前端所传递过来的数据对其
-@ApiModel(description = "员" +
-        "工登录时候传递的数据模型")
+@ApiModel(description = "员工修改与新增时候传递的数据模型")
 public class EmployeeDTO implements Serializable {
     @ApiModelProperty("主键值")
     private Long id;

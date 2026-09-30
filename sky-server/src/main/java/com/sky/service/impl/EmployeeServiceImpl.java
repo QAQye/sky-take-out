@@ -149,4 +149,23 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeMapper.updateEmployee(employee);
     }
 
+    @Override
+    public Employee getByID(Long id) {
+        Employee employee=employeeMapper.getById(id);
+//        查出来之后不想让前端看到加密后的密码
+        employee.setPassword("******");
+        return employee;
+    }
+
+    @Override
+    public void updateEmployee(EmployeeDTO employeeDTO) {
+        Employee employee =new Employee();
+        // 从employeeDTO中的属性拷贝到employee中,前提是这个属性必须要是一致的,这里还要加上修改的时间以及目前是谁修改的
+        BeanUtils.copyProperties(employeeDTO,employee);
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(BaseContext.getCurrentId());
+        employeeMapper.updateEmployee(employee);
+
+    }
+
 }
