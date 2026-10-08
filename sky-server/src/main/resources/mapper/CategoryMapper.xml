@@ -13,5 +13,27 @@
                 and type = #{type}
             </if>
         </where>
+        order by sort
     </select>
+    <update id="updateCategory" parameterType="com.sky.entity.Category">
+        update category
+        <set>
+            <if test="name !=null">
+                name = #{name},
+            </if>
+            <if test="sort!=null">
+                sort=#{sort},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="updateUser !=null">
+                update_user = #{updateUser},
+            </if>
+            <if test="status!=null">
+                status=#{status},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
 </mapper>
