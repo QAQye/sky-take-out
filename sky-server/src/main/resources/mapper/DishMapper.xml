@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--这里的映射已经是映射好了的版本-->
+<mapper namespace="com.sky.mapper.DishMapper">
+<!--    这个参数可以获得插入是所生成的主键值,让然后将主键值赋值给id-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into dish (name,category_id,description,image,price,create_time,update_time,create_user,update_user,status)
+        values
+            (#{name},#{categoryId},#{description},#{image},#{price},#{createTime},#{updateTime},#{createUser},#{updateUser},#{status})
+    </insert>
+</mapper>
