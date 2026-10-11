@@ -88,13 +88,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         //设置密码,默认的密码为123456,密码在数据库中需要加密进行存储,这里使用了工具类对密码进行了贾母
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes(StandardCharsets.UTF_8)));
 //        之后来设置创建时间以及更改时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setCreateTime(LocalDateTime.now());
+//        employee.setUpdateTime(LocalDateTime.now());
 
         //设置这条记录的创建人id以及修改人id
         //TODO 后期需要改为当前登录用户的id（这里已经完成了开发）
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//        employee.setCreateUser(BaseContext.getCurrentId());
+//        employee.setUpdateUser(BaseContext.getCurrentId());
         employeeMapper.insert(employee);
 
 
@@ -145,7 +145,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee=new Employee();
         employee.setId(id);
         employee.setStatus(status);
-        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setUpdateTime(LocalDateTime.now());
         employeeMapper.updateEmployee(employee);
     }
 
@@ -162,8 +162,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee =new Employee();
         // 从employeeDTO中的属性拷贝到employee中,前提是这个属性必须要是一致的,这里还要加上修改的时间以及目前是谁修改的
         BeanUtils.copyProperties(employeeDTO,employee);
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setUpdateUser(BaseContext.getCurrentId());
         employeeMapper.updateEmployee(employee);
 
     }
