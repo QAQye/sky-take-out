@@ -9,4 +9,22 @@
         values
             (#{name},#{categoryId},#{description},#{image},#{price},#{createTime},#{updateTime},#{createUser},#{updateUser},#{status})
     </insert>
+    <select id="querryDish" resultType="com.sky.vo.DishVO">
+        select 
+            d.*,
+            c.name AS categoryName
+        from dish d LEFT JOIN category c ON d.category_id = c.id
+        <where>
+            <if test="name !=null and name !=''">
+                and d.name like concat('%',#{name},'%')
+            </if>
+            <if test="categoryId!=null">
+                and d.category_id=#{categoryId}
+            </if>
+             <if test="status !=null">
+                and d.status=#{status}
+             </if>
+        </where>
+        order by d.update_time desc
+    </select>
 </mapper>
