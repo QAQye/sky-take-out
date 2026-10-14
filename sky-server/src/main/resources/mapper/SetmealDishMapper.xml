@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--这里的映射已经是映射好了的版本-->
+<mapper namespace="com.sky.mapper.SetmealDishMapper">
+    <select id="getByDishId" resultType="java.lang.Long">
+        select setmeal_id from setmeal_dish where dish_id in
+        <foreach collection="ids" item="dish_id" open="(" separator="," close=")">
+            #{dish_id}
+        </foreach>
+    </select>
+</mapper>

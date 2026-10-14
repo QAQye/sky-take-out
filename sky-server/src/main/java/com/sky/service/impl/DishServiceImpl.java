@@ -2,12 +2,15 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.constant.MessageConstant;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
+import com.sky.mapper.SetmealDishMapper;
+import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
@@ -15,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.sky.exception.DeletionNotAllowedException;
 
 import java.util.List;
 
@@ -24,7 +28,8 @@ public class DishServiceImpl implements DishService {
     DishMapper dishMapper;
     @Autowired
     DishFlavorMapper dishFlavorMapper;
-
+    @Autowired
+    private SetmealDishMapper setmealDishMapper;
 
     @Override
 //    加入事务注解，保证数据的一致性，保证方法是个原子性的
@@ -54,5 +59,23 @@ public class DishServiceImpl implements DishService {
 //        之后开始来写数据库查询语句
         Page<DishVO> dishes=dishMapper.querryDish(dishPageQueryDTO);
         return new PageResult(dishes.getTotal(),dishes.getResult());
+    }
+
+    @Override
+    @Transactional
+    public void deleteDish(List<Long> ids) {
+        //判断是否能够被删除是否存在起售中的菜品
+        if(dishMapper.getById(ids)>0){
+            throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
+        }
+//            是否被套餐关联
+        List<Long>setmealDishIds = setmealDishMapper.getByDishId(ids);
+        if (setmealDishIds.size()>0&&setmealDishIds!=null){
+            throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
+        }
+//        删除菜品数据
+        dishMapper.deleteByID(ids);
+//        删除口味数据
+        dishFlavorMapper.deleteByDishID(ids);
     }
 }

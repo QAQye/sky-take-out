@@ -27,4 +27,17 @@
         </where>
         order by d.update_time desc
     </select>
+    <select id="getById" resultType="java.lang.Long">
+        select count(*) from dish where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        and status=1
+    </select>
+    <delete id="deleteByID">
+        delete from dish where id in
+            <foreach collection="ids" item="id">
+                #{id}
+            </foreach>
+    </delete>
 </mapper>
