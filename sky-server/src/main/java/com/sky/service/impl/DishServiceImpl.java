@@ -10,7 +10,6 @@ import com.sky.entity.DishFlavor;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
-import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
@@ -76,6 +75,44 @@ public class DishServiceImpl implements DishService {
 //        删除菜品数据
         dishMapper.deleteByID(ids);
 //        删除口味数据
-        dishFlavorMapper.deleteByDishID(ids);
+        dishFlavorMapper.deleteByBatchDishID(ids);
+    }
+
+    @Override
+    public DishVO showDish(Long id) {
+        DishVO dishVO= dishMapper.showDish(id);
+        List <DishFlavor> dishFlavors=dishFlavorMapper.getByDishId(id);
+        dishVO.setFlavors(dishFlavors);
+        return dishVO;
+    }
+
+    @Override
+    public void updateDish(DishDTO dishDTO) {
+        Dish dish=new Dish();
+        BeanUtils.copyProperties(dishDTO,dish);
+        dishMapper.updateDish(dish);
+        //    实现方式：先删除原来有的口味信息，然后再重新插入口味数据
+        dishFlavorMapper.deleteByDishID(dishDTO.getId());
+        List<DishFlavor> dishFlavors=dishDTO.getFlavors();
+        if(dishFlavors!=null&&dishFlavors.size()>0){
+            dishFlavors.forEach(dishFlavor->dishFlavor.setDishId(dishDTO.getId()));
+//            向口味表中插入n条数据
+//            采用批量插入
+            dishFlavorMapper.insertBatch(dishFlavors);
+        }
+    }
+
+    @Override
+    public void startOrStop(Long id, Integer status) {
+        Dish dish = new Dish().builder().id(id).status(status).build();
+//        dish.setId(id);
+//        dish.setStatus(status);
+        dishMapper.updateDish(dish);
+    }
+
+    @Override
+    public List<Dish> getByCategory(Long id) {
+        List<Dish> dishes= dishMapper.getByCategory(id);
+        return dishes;
     }
 }

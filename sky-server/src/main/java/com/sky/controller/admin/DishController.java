@@ -2,9 +2,13 @@ package com.sky.controller.admin;
 
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
+import com.sky.entity.Dish;
+import com.sky.entity.DishFlavor;
+import com.sky.mapper.DishFlavorMapper;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.DishService;
+import com.sky.vo.DishVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +25,7 @@ import java.util.List;
 public class DishController {
     @Autowired
     DishService dishService;
+
     @PostMapping
     @ApiOperation("新增菜品")
     public Result save(@RequestBody DishDTO dishDTO){
@@ -42,5 +47,34 @@ public class DishController {
         log.info("删除菜品{}",ids);
         dishService.deleteDish(ids);
         return Result.success();
+    }
+    @ApiOperation("修改菜品回显")
+    @GetMapping("/{id}")
+    public Result<DishVO> showDish(@PathVariable ("id") Long id){
+        log.info("修改菜品回显功能");
+        DishVO dishVO= dishService.showDish(id);
+        return Result.success(dishVO);
+    }
+    @ApiOperation("修改菜品")
+    @PutMapping
+    public Result updateDish(@RequestBody DishDTO dishDTO){
+        log.info("修改菜品");
+        dishService.updateDish(dishDTO);
+        return Result.success();
+    }
+    @PostMapping("status/{status}")
+    @ApiOperation("修改菜品状态")
+    public Result startOrStop(@PathVariable("status") Integer status,  @RequestParam("id") Long id){
+        log.info("修改菜品状态");
+        dishService.startOrStop(id,status);
+        return Result.success();
+    }
+    @GetMapping("/list")
+    @ApiOperation("根据分类id查询菜品")
+    //这里的参数必须要匹配否则不能传递进来数据
+    public Result<List<Dish>> getCategoryDish( @RequestParam("categoryId") Long categoryId){
+        log.info("根据分类id来进行查询菜品");
+        List<Dish> dishes=dishService.getByCategory(categoryId);
+        return Result.success(dishes);
     }
 }
