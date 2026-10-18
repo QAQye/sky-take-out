@@ -27,8 +27,8 @@ public interface DishMapper {
     DishVO showDish(Long id);
     @AutoFill(OperationType.UPDATE)
     void updateDish(Dish dishDTO);
-    @Select("select * from dish where category_id=#{categoryId}")
-    List<Dish> getByCategory(Long categoryId);
+
+    List<Dish> list(Dish categoryId);
 //    void updateDishByCategoryId(Dish dish);
 
 }
