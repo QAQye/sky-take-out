@@ -91,4 +91,11 @@
         </where>
         order by create_time desc
     </select>
+    <select id="getByDishList" resultType="com.sky.entity.Dish" parameterType="com.sky.entity.Dish">
+        select * from dish
+        <where>
+            status=#{status} and category_id=#{categoryId}
+        </where>
+    </select>
+
 </mapper>

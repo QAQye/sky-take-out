@@ -24,4 +24,11 @@ public interface CategoryMapper {
     void delete(Long id);
     @Select("select * from category where type=#{type}")
     List<Category> catgoryList(Integer type);
+    @Select({"<script>",
+            "select * from category",
+            "<where>",
+            "<if test='type != null'>type = #{type}</if>",
+            "</where>",
+            "</script>"})
+    List<Category> getBytype(@Param("type") Integer type);
 }

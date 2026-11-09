@@ -2,7 +2,6 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.sky.annotation.AutoFill;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.dto.DishDTO;
@@ -149,5 +148,19 @@ public class DishServiceImpl implements DishService {
                 .build();
         List<Dish> dishes= dishMapper.list(dish);
         return dishes;
+    }
+
+    @Override
+    public List<DishVO> listWithFlavor(Dish dish) {
+        List<DishVO> dishVOS = new ArrayList<>();
+        List<Dish> dishes=dishMapper.getByDishList(dish);
+        dishes.forEach((e)->{
+            DishVO dishVO =new DishVO();
+            List<DishFlavor> dishFlavors= dishFlavorMapper.getByDishId(e.getId());
+            BeanUtils.copyProperties(e,dishVO);
+            dishVO.setFlavors(dishFlavors);
+            dishVOS.add(dishVO);
+        });
+        return dishVOS;
     }
 }

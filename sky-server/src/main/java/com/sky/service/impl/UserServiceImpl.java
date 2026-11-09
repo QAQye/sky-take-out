@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.sky.constant.MessageConstant;
 import com.sky.dto.UserLoginDTO;
+import com.sky.entity.Category;
 import com.sky.entity.User;
 import com.sky.exception.LoginFailedException;
 import com.sky.mapper.UserMapper;
@@ -49,6 +50,8 @@ public class UserServiceImpl implements UserService {
         return user;
 
     }
+
+
     private String getOpenId(String code){
         //        微信登录与传统的账户密码登录不同，传统的账号密码登录需要在数据库中查询，但是微信登录不需要，查询的是微信登录的接口
         //1.调用微信登录接口服务，获取当前微信用户的openid
