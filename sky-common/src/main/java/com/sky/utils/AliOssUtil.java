@@ -65,4 +65,19 @@ public class AliOssUtil {
 
         return stringBuilder.toString();
     }
+//    构建一个缩略图的返回地址供前端分页查询的时候使用，以免图片过多会下载原图
+    public  String thumbnailUrl(String imageUrl){
+//        构建请求的地址
+        String prefix = "https://" + bucketName + "." + endpoint + "/";
+        // 空地址、其他来源的图片、已有参数的地址，保持原样
+        if (imageUrl == null
+                || !imageUrl.startsWith(prefix)
+                || imageUrl.length() == prefix.length()
+                || imageUrl.contains("?")
+                || imageUrl.contains("#")) {
+            return imageUrl;
+        }
+
+        return imageUrl + "?x-oss-process=image/resize,w_200,limit_1";
+    }
 }

@@ -16,6 +16,7 @@ import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
+import com.sky.utils.AliOssUtil;
 import com.sky.vo.DishVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,8 @@ public class DishServiceImpl implements DishService {
     private SetmealDishMapper setmealDishMapper;
     @Autowired
     private SetmealMapper setmealMapper;
+    @Autowired
+    private AliOssUtil aliOssUtil;
 
     @Override
 //    加入事务注解，保证数据的一致性，保证方法是个原子性的
@@ -65,6 +68,12 @@ public class DishServiceImpl implements DishService {
         PageHelper.startPage(dishPageQueryDTO.getPage(),dishPageQueryDTO.getPageSize());
 //        之后开始来写数据库查询语句
         Page<DishVO> dishes=dishMapper.querryDish(dishPageQueryDTO);
+
+        // 将本次分页响应中的原图地址转换为缩略图地址，之后将这个数据拿来返回给前端
+        dishes.forEach(dish -> {
+            String imageUrl = dish.getImage();
+            dish.setImage(aliOssUtil.thumbnailUrl(imageUrl));
+        });
         return new PageResult(dishes.getTotal(),dishes.getResult());
     }
 
