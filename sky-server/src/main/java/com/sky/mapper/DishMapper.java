@@ -20,7 +20,7 @@ public interface DishMapper {
 
     Page<DishVO> querryDish(DishPageQueryDTO dishPageQueryDTO);
 
-    Long getById(List<Long> ids);
+    Long getByIds(List<Long> ids);
 
     void deleteByID(List<Long> ids);
 
@@ -30,6 +30,8 @@ public interface DishMapper {
 
     List<Dish> list(Dish categoryId);
     List<Dish> getByDishList(Dish dish);
+    @Select("select * from dish where id=#{id}")
+    Dish getById(Long id);
 //    void updateDishByCategoryId(Dish dish);
 
 }

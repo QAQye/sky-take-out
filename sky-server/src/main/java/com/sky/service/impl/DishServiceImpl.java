@@ -85,7 +85,7 @@ public class DishServiceImpl implements DishService {
     @Transactional
     public void deleteDish(List<Long> ids) {
         //判断是否能够被删除是否存在起售中的菜品
-        if(dishMapper.getById(ids)>0){
+        if(dishMapper.getByIds(ids)>0){
             throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
         }
 //            是否被套餐关联
