@@ -14,6 +14,7 @@ import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.SetmealService;
+import com.sky.utils.AliOssUtil;
 import com.sky.vo.DishItemVO;
 import com.sky.vo.SetmealVO;
 import org.springframework.beans.BeanUtils;
@@ -29,12 +30,19 @@ public class SetmealImpl implements SetmealService {
     SetmealMapper setmealMapper;
     @Autowired
     SetmealDishMapper setmealDishMapper;
+    @Autowired
+    AliOssUtil aliOssUtil;
 
     @Override
     public PageResult setmealQuery(SetmealPageQueryDTO setmealPageQueryDTO) {
 
         PageHelper.startPage(setmealPageQueryDTO.getPage(),setmealPageQueryDTO.getPageSize());
         Page<SetmealVO> setmeals= setmealMapper.pageQuery(setmealPageQueryDTO);
+        setmeals.forEach((e)->{
+            String imageUrl=e.getImage();
+            e.setImage(aliOssUtil.thumbnailUrl(imageUrl,40,40));
+        }
+        );
 //        返回page结果的总页数以及返会对应的结果数组
         return new PageResult(setmeals.getTotal(),setmeals.getResult());
     }

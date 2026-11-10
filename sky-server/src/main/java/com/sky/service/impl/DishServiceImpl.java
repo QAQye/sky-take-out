@@ -71,7 +71,7 @@ public class DishServiceImpl implements DishService {
         // 将本次分页响应中的原图地址转换为缩略图地址，之后将这个数据拿来返回给前端
         dishes.forEach(dish -> {
             String imageUrl = dish.getImage();
-            dish.setImage(aliOssUtil.thumbnailUrl(imageUrl));
+            dish.setImage(aliOssUtil.thumbnailUrl(imageUrl,40,40));
         });
         return new PageResult(dishes.getTotal(),dishes.getResult());
     }
