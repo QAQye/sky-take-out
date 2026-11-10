@@ -8,10 +8,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController("userShoppingCartController")
 @RequestMapping("/user/shoppingCart")
@@ -26,5 +25,22 @@ public class ShoppingCartController {
         log.info("添加购物车，商品信息为......");
         shoppingCartService.add(shoppingCartDTO);
         return  Result.success();
+    }
+    @GetMapping("/list")
+    public Result<List<ShoppingCart>> list(){
+        List<ShoppingCart> shoppingCart =shoppingCartService.shoppingList();
+        return Result.success(shoppingCart);
+    }
+    @DeleteMapping("/clean")
+    public Result clean(){
+        shoppingCartService.clean();
+        return Result.success();
+    }
+    @PostMapping("/sub")
+    public Result delete(@RequestBody ShoppingCartDTO shoppingCartDTO){
+        shoppingCartService.deleteShoppingCart(shoppingCartDTO);
+        return Result.success();
+
+
     }
 }
